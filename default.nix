@@ -8,22 +8,42 @@
 let
   user = config.common.username;
   cfg = config.services.music;
-  rtPackages = builtins.tryEval pkgs.linuxPackages-rt_latest;
   guitarixPkg = pkgs.guitarix.override {
     enableOptimization = true;
   };
+  rtKernelPackages = cfg.kernelPackages.extend (
+    self: super: {
+      kernel = super.kernel.override {
+        ignoreConfigErrors = true;
+        structuredExtraConfig = with lib.kernel; {
+          PREEMPT_LAZY = lib.mkForce no;
+          PREEMPT = lib.mkForce yes;
+          PREEMPT_RT = yes;
+        };
+      };
+    }
+  );
 in
 {
   options.services.music = {
     enable = lib.mkEnableOption "guitar recording and live performance (PipeWire tuning and apps)";
 
+    kernelPackages = lib.mkOption {
+      type = lib.types.raw;
+      default = pkgs.linuxPackages_latest;
+      defaultText = lib.literalExpression "pkgs.linuxPackages_latest";
+      description = ''
+        Base kernel packages to extend with PREEMPT_RT when
+        `services.music.realtimeKernel` is enabled.
+      '';
+    };
+
     realtimeKernel = lib.mkOption {
       type = lib.types.bool;
-      default = false;
+      default = true;
       description = ''
-        When the channel ships `linuxPackages-rt_latest`, use it for PREEMPT_RT.
-        Otherwise the module still applies `preempt=full` and `threadirqs` via
-        `boot.kernelParams` if this option is enabled.
+        Build and boot a PREEMPT_RT kernel from `services.music.kernelPackages`.
+        Also sets `threadirqs` on the kernel command line.
       '';
     };
 
@@ -46,13 +66,9 @@ in
   config = lib.mkIf cfg.enable {
     nixpkgs.config.allowUnfree = true;
 
-    boot.kernelPackages = lib.mkIf (cfg.realtimeKernel && rtPackages.success) (
-      lib.mkForce rtPackages.value
-    );
+    boot.kernelPackages = lib.mkIf cfg.realtimeKernel (lib.mkForce rtKernelPackages);
 
-    boot.kernelParams = lib.mkAfter (
-      [ "threadirqs" ] ++ lib.optional cfg.realtimeKernel "preempt=full"
-    );
+    boot.kernelParams = lib.mkAfter [ "threadirqs" ];
 
     powerManagement.cpuFreqGovernor = lib.mkOverride 50 "performance";
 
@@ -125,10 +141,5 @@ in
         tuxguitar
       ];
     };
-
-    warnings = lib.optional (cfg.realtimeKernel && !rtPackages.success) ''
-      services.music.realtimeKernel is enabled but this nixpkgs revision does not
-      provide linuxPackages-rt_latest; only kernel command-line tuning is applied.
-    '';
   };
 }

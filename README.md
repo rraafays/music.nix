@@ -18,7 +18,8 @@ The module sets `users.users.<common.username>.isNormalUser` to a default of `tr
 | Option | Role |
 | ------ | ---- |
 | `services.music.enable` | Full stack below |
-| `services.music.realtimeKernel` | PREEMPT_RT kernel when the channel provides it; else `preempt=full` + `threadirqs` |
+| `services.music.realtimeKernel` | PREEMPT_RT kernel (default on); builds from `kernelPackages` |
+| `services.music.kernelPackages` | Base `linuxPackages_*` set to extend (default `linuxPackages_latest`) |
 | `services.music.sampleRate` | Default PipeWire rate (default 48000 Hz) |
 | `services.music.quantum` | Default buffer in frames (default 256; lower = less latency) |
 
