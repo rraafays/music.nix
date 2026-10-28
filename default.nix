@@ -30,8 +30,8 @@ in
 
     kernelPackages = lib.mkOption {
       type = lib.types.raw;
-      default = pkgs.linuxPackages_latest;
-      defaultText = lib.literalExpression "pkgs.linuxPackages_latest";
+      default = pkgs.linuxPackages;
+      defaultText = lib.literalExpression "pkgs.linuxPackages";
       description = ''
         Base kernel packages to extend with PREEMPT_RT when
         `services.music.realtimeKernel` is enabled.
