@@ -9,7 +9,6 @@ Minimal host (no `./user`, no `./system`):
 ```nix
 imports = [ ./src/common ./src/music ];
 common.username = "you";
-services.music.enable = true;
 system.stateVersion = "26.05";
 ```
 
@@ -17,9 +16,9 @@ The module sets `users.users.<common.username>.isNormalUser` to a default of `tr
 
 | Option | Role |
 | ------ | ---- |
-| `services.music.enable` | Full stack below |
+| `services.music.enable` | On by default when imported; set `false` to disable |
 | `services.music.realtimeKernel` | PREEMPT_RT kernel (default on); builds from `kernelPackages` |
-| `services.music.kernelPackages` | Base `linuxPackages_*` set to extend (default `linuxPackages_latest`) |
+| `services.music.kernelPackages` | Base `linuxPackages_*` set to extend (default `linuxPackages`) |
 | `services.music.sampleRate` | Default PipeWire rate (default 48000 Hz) |
 | `services.music.quantum` | Default buffer in frames (default 256; lower = less latency) |
 

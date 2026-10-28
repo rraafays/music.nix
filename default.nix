@@ -26,7 +26,15 @@ let
 in
 {
   options.services.music = {
-    enable = lib.mkEnableOption "guitar recording and live performance (PipeWire tuning and apps)";
+    enable = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Guitar recording and live performance (PipeWire tuning and apps).
+        Importing this module is enough; set to `false` to disable without
+        removing the import.
+      '';
+    };
 
     kernelPackages = lib.mkOption {
       type = lib.types.raw;
