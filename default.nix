@@ -139,10 +139,7 @@ in
       extraGroups = lib.mkAfter [ "audio" ];
       packages = with pkgs; [
         carla
-        gnomeExtensions.audio-switch-shortcuts
-        gnome-sound-recorder
         guitarixPkg
-        pwvucontrol
         reaper
         tonelib-gfx
         tonelib-jam
