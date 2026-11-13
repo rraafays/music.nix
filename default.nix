@@ -143,7 +143,6 @@ in
         reaper
         tonelib-gfx
         tonelib-jam
-        tuxguitar
       ];
     };
   };
