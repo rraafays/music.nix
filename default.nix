@@ -139,6 +139,7 @@ in
       extraGroups = lib.mkAfter [ "audio" ];
       packages = with pkgs; [
         carla
+        denemo
         guitarixPkg
         reaper
         tonelib-gfx
