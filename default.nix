@@ -8,7 +8,7 @@
 let
   user = config.common.username;
   cfg = config.services.music;
-  guitarixPkg = pkgs.guitarix.override {
+  guitarixOptimised = pkgs.guitarix.override {
     enableOptimization = true;
   };
   rtKernelPackages = cfg.kernelPackages.extend (
@@ -140,7 +140,7 @@ in
       packages = with pkgs; [
         ardour
         carla
-        guitarixPkg
+        guitarixOptimised
         lilypond
         tonelib-gfx
         tonelib-jam
