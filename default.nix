@@ -138,10 +138,10 @@ in
       isNormalUser = lib.mkDefault true;
       extraGroups = lib.mkAfter [ "audio" ];
       packages = with pkgs; [
+        ardour
         carla
         guitarixPkg
         lilypond
-        reaper
         tonelib-gfx
         tonelib-jam
       ];
